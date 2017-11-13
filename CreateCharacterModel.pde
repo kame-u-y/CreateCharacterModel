@@ -9,6 +9,8 @@ ArrayList<Pixel> borderPixels;
 
 int oldDirection = -1;
 
+String pressedKey = "m";
+
 HashMap<Integer, Pixel> directionMap = new HashMap<Integer, Pixel>() {
   {
     put(0, new Pixel(-1, 1));
@@ -27,16 +29,14 @@ HashMap<Integer, Pixel> directionMap = new HashMap<Integer, Pixel>() {
 };
 
 void setup() {
-
-
-  size(200, 200);
+  size(300, 300);
   borderPixels = new ArrayList<Pixel>();
 
   fill(0, 100, 0);
   background(255);
   textAlign(CENTER);
   textSize(250);
-  text("m", width/2, height/2 + 70);
+  text(pressedKey, width/2, height/2 + 90);
 
   loadPixels();
 
@@ -53,6 +53,7 @@ beginingPixel:
     }
   }
 
+  int count = 0;
 searchOutlines:
   while (true) {
     Pixel lastPixel = borderPixels.get( borderPixels.size()-1 );
@@ -65,6 +66,8 @@ searchOutlines:
           break searchOutlines;
         }
         borderPixels.add(new Pixel(searchX, searchY));
+        print(true, borderPixels.size());
+        count++;
         oldDirection = i%8;
         break;
       }
@@ -73,12 +76,27 @@ searchOutlines:
 
   background(255);
 
-  for (int i=0; i<borderPixels.size(); i++) {
-    fill(0);
-    point(borderPixels.get(i).x, borderPixels.get(i).y);
+  noFill();
+  beginShape();
+  {
+    for (int i=0; i<borderPixels.size()-1; i++) {
+      //fill(0);
+      //point(borderPixels.get(i).x, borderPixels.get(i).y);
+      vertex(borderPixels.get(i).x, borderPixels.get(i).y);
+    }
   }
+  endShape(CLOSE);
 
+
+  PrintWriter output = createWriter("borderPixels.txt");
+  for (int i=0; i<borderPixels.size()-1; i++) {
+    output.println(borderPixels.get(i).x +","+borderPixels.get(i).y);
+  }
+  output.close();
 }
+
+//void draw() {
+//}
 
 int[][] pixels1To2(int[] _pixels, int _width, int _height) {
   int[][] outputPixels2 = new int[_width][_height];
@@ -87,3 +105,8 @@ int[][] pixels1To2(int[] _pixels, int _width, int _height) {
   }
   return outputPixels2;
 }
+
+//void keyPressed() {
+//  pressedKey = str(key);
+//  setup();
+//}
