@@ -7,7 +7,28 @@ color[][] pixels2;
 
 ArrayList<Pixel> borderPixels;
 
+int oldDirection = -1;
+
+HashMap<Integer, Pixel> directionMap = new HashMap<Integer, Pixel>() {
+  {
+    put(0, new Pixel(-1, 1));
+    put(1, new Pixel(0, 1));
+    put(2, new Pixel(1, 1));
+    put(3, new Pixel(1, 0));
+    put(4, new Pixel(1, -1));
+    put(5, new Pixel(0, -1));
+    put(6, new Pixel(-1, -1));
+    put(7, new Pixel(-1, 0));
+    put(8, new Pixel(-1, 1));
+    put(9, new Pixel(0, 1));
+    put(10, new Pixel(1, 1));
+    put(11, new Pixel(1, 0));
+  }
+};
+
 void setup() {
+
+
   size(200, 200);
   borderPixels = new ArrayList<Pixel>();
 
@@ -21,40 +42,42 @@ void setup() {
 
   pixels2 = pixels1To2(pixels, width, height);
 
-  //for(int i=0; i<pixels2.length; i++) {
-  //  for(int j=0; j<pixels2[i].length; j++){
-  //    if(pixels2[i][j]!=-1){
 
-  //    }
-  //  }
-  //}
-
-  for (int i=1; i<pixels2.length-1; i++) {
-    for (int j=1; j<pixels2[i].length-1; j++) {
-      //文字と背景の境界を取得
-      if ( (pixels2[i-1][j]==-1 && pixels2[i][j]!=-1) 
-        || (pixels2[i][j-1]==-1 && pixels2[i][j]!=-1) 
-        || (pixels2[i][j]!=-1 && pixels2[i+1][j]==-1) 
-        || (pixels2[i][j]!=-1 && pixels2[i][j+1]==-1) ) {
-        borderPixels.add( new Pixel(i, j, pixels2[i][j]) );
-      }
-
-      if (pixels2[i][j]==-1) {
-        //print(pixels2[i][j]+",");
-        print(0);
-      } else {
-        print(1);
+beginingPixel: 
+  for (int i=0; i<pixels2.length; i++) {
+    for (int j=0; j<pixels2[i].length; j++) {
+      if (pixels2[i][j]!=-1) {
+        borderPixels.add(new Pixel(i, j));
+        break beginingPixel;
       }
     }
-    println();
+  }
+
+searchOutlines:
+  while (true) {
+    Pixel lastPixel = borderPixels.get( borderPixels.size()-1 );
+    int startDirection = (oldDirection==-1) ? 0 : (oldDirection+6)%8;
+    for (int i=startDirection; i<startDirection+5; i++) {
+      int searchX = lastPixel.x + directionMap.get(i).x;
+      int searchY = lastPixel.y + directionMap.get(i).y;
+      if (pixels2[searchX][searchY] != -1) {
+        if (searchX==borderPixels.get(0).x && searchY==borderPixels.get(0).y) {
+          break searchOutlines;
+        }
+        borderPixels.add(new Pixel(searchX, searchY));
+        oldDirection = i%8;
+        break;
+      }
+    }
   }
 
   background(255);
 
   for (int i=0; i<borderPixels.size(); i++) {
-    print("("+borderPixels.get(i).x +","+ borderPixels.get(i).y +")");
+    fill(0);
     point(borderPixels.get(i).x, borderPixels.get(i).y);
   }
+
 }
 
 int[][] pixels1To2(int[] _pixels, int _width, int _height) {
