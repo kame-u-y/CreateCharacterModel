@@ -1,3 +1,10 @@
+//最初の１回目の輪郭追跡で、borderPixelsに探索済みの輪郭を格納している。
+//２回目以降に輪郭追跡をするときは、それを避けつつ、新しい輪郭を探す必要がある？
+//もしかしたら、単純に探索するよりも良い方法があるかもしれない。
+
+//少なくとも、beginingPixelまでは探索済みなので、明らかに、borderPixelは存在しない。
+//探索範囲をもっと制限できるか？
+
 String inputCharacter = "";
 //PGraphics text;
 color textColor;
@@ -7,7 +14,7 @@ color[][] pixels2;
 
 ArrayList<Pixel> borderPixels;
 
-int oldDirection = -1;
+int oldDirectionKey = -1;
 
 String pressedKey = "m";
 
@@ -55,10 +62,10 @@ beginingPixel:
 
   int count = 0;
 searchOutlines:
-  while (true) {
+  while (count<5000) {
     Pixel lastPixel = borderPixels.get( borderPixels.size()-1 );
-    int startDirection = (oldDirection==-1) ? 0 : (oldDirection+6)%8;
-    for (int i=startDirection; i<startDirection+5; i++) {
+    int startDirectionKey = (oldDirectionKey==-1) ? 0 : (oldDirectionKey+6)%8;
+    for (int i=startDirectionKey; i<startDirectionKey+5; i++) {
       int searchX = lastPixel.x + directionMap.get(i).x;
       int searchY = lastPixel.y + directionMap.get(i).y;
       if (pixels2[searchX][searchY] != -1) {
@@ -67,11 +74,14 @@ searchOutlines:
         }
         borderPixels.add(new Pixel(searchX, searchY));
         print(true, borderPixels.size());
-        count++;
-        oldDirection = i%8;
-        break;
+        oldDirectionKey = i%8;
+        continue searchOutlines;
       }
     }
+    print("hoge\n");
+    borderPixels.add(lastPixel);
+    oldDirectionKey = (oldDirectionKey + 4)%8;
+    count++;
   }
 
   background(255);
@@ -88,15 +98,25 @@ searchOutlines:
   endShape(CLOSE);
 
 
-  PrintWriter output = createWriter("borderPixels.txt");
-  for (int i=0; i<borderPixels.size()-1; i++) {
-    output.println(borderPixels.get(i).x +","+borderPixels.get(i).y);
-  }
-  output.close();
+  //  PrintWriter output = createWriter("borderPixels.txt");
+  //  for (int i=0; i<borderPixels.size()-1; i++) {
+  //    output.println(borderPixels.get(i).x +","+borderPixels.get(i).y);
+  //  }
+  //  output.close();
+
+  //beginingPixel2:
+  //  for(int i=0; i<pixels2.length; i++){
+  //    for(int j=0; j<pixels2[i].length; j++){
+  //      int searchX = pixels2[i][j].x;
+  //      int 
+  //      int searchY = pixels2[i][j].y;
+  //      if(searchX==borderPixe
+  //    }
+  //  }
 }
 
-//void draw() {
-//}
+void draw() {
+}
 
 int[][] pixels1To2(int[] _pixels, int _width, int _height) {
   int[][] outputPixels2 = new int[_width][_height];
@@ -106,7 +126,7 @@ int[][] pixels1To2(int[] _pixels, int _width, int _height) {
   return outputPixels2;
 }
 
-//void keyPressed() {
-//  pressedKey = str(key);
-//  setup();
-//}
+void keyPressed() {
+  pressedKey = str(key);
+  setup();
+}
