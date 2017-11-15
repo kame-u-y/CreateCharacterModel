@@ -1,15 +1,21 @@
 class Pixel {
-  private int x;
-  private int y;
-  //private int c;
+  int x;
+  int y;
+  int borderOrder;
 
   Pixel(int _x, int _y) {
     x = _x;
     y = _y;
-    //c = _c;
   }
-
-  //  color getPixelColor() {
-  //    return c;
-  //  }
+  
+  Pixel(int _x, int _y, int _order) {
+    x = _x;
+    y = _y;
+    borderOrder = _order;
+  }
+  
+  void setPixel(int _x, int _y){
+    x = _x;
+    y = _y;
+  }
 }
