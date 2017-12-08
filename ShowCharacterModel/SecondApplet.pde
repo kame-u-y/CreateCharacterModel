@@ -1,5 +1,7 @@
 class SecondApplet extends PApplet {
+
   PApplet parent;
+
 
   SecondApplet(PApplet _parent) {
     super();
@@ -28,11 +30,16 @@ class SecondApplet extends PApplet {
   }
 
   void setup() {
+    setupGUI();
   }
 
   void draw() {
     background(100);
     //fill(0);
     //ellipse(width/2, height/2, width/2, height/2);
+  }
+
+  void setupGUI() {
+    
   }
 }
