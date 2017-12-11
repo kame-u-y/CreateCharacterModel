@@ -2,6 +2,9 @@ class CharaGraphics {
   PGraphics image;
   int imageX, imageY;
   int vtxInterval = 1;
+  float vtxRandomY = 0;
+  float vtxRandomX  = 0;
+  float vtxRandom = 0;
 
   //探索済みで次回以降に探索を回避するためのHashMap 例：<"x,y", new Pixel(x,y)>
   HashMap<String, Pixel> searchedBorderPixels;
@@ -22,14 +25,13 @@ class CharaGraphics {
     //hoge = (int) (31 + 30*sin(frameCount%(2*PI)) );
     //hoge = (int)diameter + 1;
 
-    float randomValue=0;
 
-    image = createGraphics(400, 400);
+    image = createGraphics(300, 300);
     image.beginDraw();
     {
       //image.noFill();
       //image.background(0, 0, 0, 0);
-      image.fill(0, 100, 0);
+      image.fill(-1);
 
       for (int i=0; i<borderPixelsOrderedKey.size()-1; i++) {
         if (borderInfoArray.get(i).isInline) continue;
@@ -40,9 +42,10 @@ class CharaGraphics {
 
             if (j%vtxInterval==0) {
               //image.curveVertex(popPixel.x + random(-randomValue, randomValue), popPixel.y + random(-randomValue, randomValue));
+
               image.curveVertex(
-                popPixel.x + random(-randomValue, randomValue), 
-                popPixel.y + random(-randomValue, randomValue)
+                popPixel.x + random(-vtxRandomX, vtxRandomX), 
+                popPixel.y + random(-vtxRandomY, vtxRandomY)
                 );
               //image.vertex(popPixel.x + random(-100*mouseX/width, 100*(mouseX)/width), popPixel.y + random(-100*mouseY/height, 100*(mouseY)/height));
             }
@@ -60,8 +63,8 @@ class CharaGraphics {
                 if (q%vtxInterval==0) {
                   //image.curveVertex(popContourPixel.x+ random(-randomValue, randomValue), popContourPixel.y + random(-randomValue, randomValue));
                   image.vertex(
-                    popContourPixel.x+ random(-randomValue, randomValue), 
-                    popContourPixel.y + random(-randomValue, randomValue)
+                    popContourPixel.x+ random(-vtxRandomX, vtxRandomX), 
+                    popContourPixel.y + random(-vtxRandomY, vtxRandomY)
                     );
                 }
                 //////////////////
@@ -78,8 +81,6 @@ class CharaGraphics {
     }
     image.endDraw();
   }
-
-
 
 
   void createModel(String _chara) {
@@ -119,7 +120,7 @@ class CharaGraphics {
     };
 
     //borderPixels = loadStrings("borderPixels_kame.txt");
-    PGraphics defChara = createGraphics(400, 400);
+    PGraphics defChara = createGraphics(300, 300);
     PFont font = createFont("Zapfino", 250);
     //PFont font = createFont("SansSerif", 250);
 
