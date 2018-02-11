@@ -1,6 +1,5 @@
 class CharaGraphics {
   PGraphics image;
-  int imageX, imageY;
   int vtxInterval = 1;
   float vtxRandomY = 0;
   float vtxRandomX  = 0;
@@ -13,9 +12,8 @@ class CharaGraphics {
   //輪郭ごとの情報を格納したArrayList、追跡した順番に保存
   ArrayList<BorderInfo> borderInfoArray;
 
-  CharaGraphics(int _x, int _y, String _chara) {
-    imageX = _x;
-    imageY = _y;
+  CharaGraphics(String _chara) {
+
     createModel(_chara);
     shapeModel();
   }

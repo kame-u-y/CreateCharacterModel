@@ -20,7 +20,7 @@ int cnt_j = 10;
 int effect = 0;
 
 void settings() {
-  size(1000, 1000, P3D);
+  size(430, 430, P3D);
 }
 
 void setup() {
@@ -32,13 +32,18 @@ void setup() {
 
   charaGraphicsArray = new ArrayList<CharaGraphics>();
   charaGraphicsArray.add( 
-    new CharaGraphics((int)random(100, 600), (int)random(100, 300), "総") 
+    new CharaGraphics("総") 
     );
   hint(ENABLE_DEPTH_SORT);
   imageMode(CENTER);
 }
 
 void draw() {
+  ////////////////////////////////////////////////////////
+  scale(0.5);
+  translate(200.8, 202.3, 0.1);
+  ////////////////////////////////////////////////////////
+
   float diameter = map(amp.analyze(), 0.0, 1.0, 0.0, 1000);
   background(50);
   CharaGraphics cg2 = charaGraphicsArray.get(charaGraphicsArray.size()-1);
@@ -81,7 +86,7 @@ void draw() {
     int centerCnt = 100;
     for (int i=0; i<centerCnt; i++) {
       pushMatrix();
-      scale(1.5);
+      scale(1.0);
       translate(0, 0, (-centerCnt+i)/5.0);
       image(cg2.image, 0, 0);
       popMatrix();
@@ -177,7 +182,7 @@ void setupGUI() {
       public void actionPerformed(ActionEvent event) {
       String[] inputCharas = field.getText().split("");
       for (int i=0; i<inputCharas.length; i++) {
-        charaGraphicsArray.add( new CharaGraphics(0, 0, inputCharas[i]) );
+        charaGraphicsArray.add( new CharaGraphics(inputCharas[i]) );
       }
       field.setText("");
     }
